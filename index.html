@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Cocos Creator | PA</title>
+
+  <!--http://www.html5rocks.com/en/mobile/mobifying/-->
+  <meta name="viewport"
+        content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1,minimal-ui=true"/>
+
+  <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- force webkit on 360 -->
+  <meta name="renderer" content="webkit"/>
+  <meta name="force-rendering" content="webkit"/>
+  <!-- force edge on IE -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- force full screen on some browser -->
+  <meta name="full-screen" content="yes"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="360-fullscreen" content="true"/>
+
+  <!--fix fireball/issues/3568 -->
+  <!--<meta name="browsermode" content="application">-->
+  <meta name="x5-page-mode" content="app">
+
+  <!--<link rel="apple-touch-icon" href=".png" />-->
+  <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+
+  <link rel="stylesheet" type="text/css" href="style.f76d1.css"/>
+
+
+<!-- build-stamp: commit=e3ed643+dirty time=2026-09-23 19:04 -->
+<meta name="build-commit" content="e3ed643+dirty"/>
+<meta name="build-time" content="2026-09-23 19:04"/>
+<script>console.log("[H5] build commit=e3ed643+dirty time=2026-09-23 19:04");</script>
+</head>
+
+<body><!-- pa-loading:start -->  <script>(function () { try { var x = new XMLHttpRequest(); x.open("GET", "assets/resources/native/b9/b96f0d98-1021-45a4-b3ce-3acf5b278678.ec55b.mp3", true); x.responseType = "arraybuffer"; x.send(); } catch (e) {} })();</script>
+
+<style>
+  /* 加载遮罩：由 tools/loading-screen.py 生成。要改样式请改那个脚本，别直接改产物。 */
+  html, body { background: #0a0d12; }
+  /* 外层：**从第一帧就铺满整窗、不透明** —— 专门遮住引擎自带的 Cocos 启动画面（黑底 + logo）
+     和编辑器预览页自己那条加载页，不让它们“一闪而过”（用户反馈）。它自己不做对齐、不淡入。 */
+  #pa-loading {
+    --u: 0.25;                        /* 1 美术像素 = 多少 CSS 像素（脚本按屏幕算） */
+    position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+    z-index: 2147483000; overflow: hidden; background: #0a0d12;
+    transition: opacity .45s ease;
+    font-family: "Arial Black", "Microsoft YaHei", Arial, sans-serif;
+    -webkit-user-select: none; user-select: none;
+  }
+  /* 内层 = 真正的“加载画面”（美术 + 进度条）：只负责对齐游戏画面的矩形。
+     量到矩形前先不显（外层黑底已经压住了 Cocos 启动画面，不会露馅）；量到后淡入。
+     矩形晚改（编辑器预览套设备盒子）就平滑过渡，不要“啪”一下跳（用户反馈过“一下子变小了”）。 */
+  #pa-loading .pl-screen {
+    position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden;
+    opacity: 0;
+    transition: opacity .45s ease;
+  }
+  #pa-loading .pl-screen.pl-ready {
+    opacity: 1;
+    transition: opacity .45s ease, left .3s ease, top .3s ease, width .3s ease, height .3s ease;
+  }
+  #pa-loading.pl-hide { opacity: 0; pointer-events: none; }
+  #pa-loading .pl-bg {
+    position: absolute; left: 0; top: 0; right: 0; bottom: 0;
+    background: #0a0d12 url(loading/bg.webp) center center / cover no-repeat;
+  }
+  #pa-loading .pl-bar {
+    position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%);
+    width: calc(var(--u) * 2012px); height: calc(var(--u) * 177px);
+    background: url(loading/bar.webp) left top / 100% 100% no-repeat;
+  }
+  #pa-loading .pl-track {
+    position: absolute; overflow: hidden;
+    left: calc(var(--u) * 395px); top: calc(var(--u) * 55px);
+    width: calc(var(--u) * 1324px); height: calc(var(--u) * 55px);
+  }
+  #pa-loading .pl-fill {
+    display: block; width: 0; height: 100%;
+    background: url(loading/fill.webp) left center / 100% 100% no-repeat;
+  }
+  #pa-loading .pl-pct {
+    position: absolute; transform: translate(-50%, -50%); white-space: nowrap;
+    left: calc(var(--u) * 1854px); top: calc(var(--u) * 82px);
+    font-size: calc(var(--u) * 64px); line-height: 1; color: #f2e3c6;
+    text-shadow: 0 0 calc(var(--u) * 7px) #2b1a09,
+                 0 calc(var(--u) * 3px) calc(var(--u) * 4px) rgba(0, 0, 0, .55);
+  }
+  #pa-loading .pl-tip {
+    position: absolute; left: 0; right: 0; bottom: 3.5%; text-align: center;
+    font: 400 14px/1.5 "Microsoft YaHei", Arial, sans-serif;
+    color: rgba(255, 255, 255, .5); opacity: 0; transition: opacity .4s ease;
+  }
+  #pa-loading .pl-tip.pl-show { opacity: 1; }
+  /* 声音解锁提示（浏览器不允许没交互就出声：点一下才能有开场警报），
+     第一次点击/触摸后自动淡掉 */
+  /* 进度条走完 → 收起进度条、换成“请点击任意位置开始游戏”（点击那一下也是浏览器的用户手势，
+     直接把音频解锁 → 开场警报加载完/进入游戏时就能自动响）。
+     `display: none !important` = 级联里的最高优先级：JS 已经写了内联 display:none，这里再加一层，
+     任何旧 CSS / 缓存样式 / 别人的 `!important` 都压不回这条进度条（用户反复报过“进度条还在”）。 */
+  #pa-loading .pl-bar.pl-gone { opacity: 0; display: none !important; transition: none; }
+  /* 位置 = **进度条上方**（与条分开，中间留一段间距）：万一进度条因为缓存/环境没被收掉，
+     文字也不会和条叠在一起（用户口径：“往上移、与进度条分开”）。
+     底部偏移 = 条的下边距(8%) + 条高(177u) + 间距(40u) */
+  #pa-loading .pl-start {
+    position: absolute; left: 50%; bottom: calc(8% + var(--u) * 177px + var(--u) * 40px);
+    transform: translateX(-50%); white-space: nowrap;
+    text-align: center;
+    background: none; border: 0; padding: 0; outline: none; cursor: pointer;
+    font: 600 calc(var(--u) * 92px)/1.4 "Microsoft YaHei", Arial, sans-serif;
+    color: #ffffff; text-shadow: 0 3px 14px rgba(0, 0, 0, .8);
+    opacity: 0; transition: opacity .35s ease;
+  }
+  #pa-loading .pl-start.pl-on { opacity: 1; animation: pa-start-breathe 1.6s ease-in-out infinite; }
+  @keyframes pa-start-breathe { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  /* 声音提示（默认关，SOUND_HINT = ''）：排在“点击开始”那行**上面**，不与它叠 */
+  #pa-loading .pl-sound {
+    position: absolute; left: 0; right: 0; text-align: center; pointer-events: none;
+    bottom: calc(8% + var(--u) * 177px + var(--u) * 40px + var(--u) * 150px);
+    font: 500 calc(var(--u) * 52px)/1.4 "Microsoft YaHei", Arial, sans-serif;
+    color: rgba(255, 255, 255, .8); text-shadow: 0 2px 6px rgba(0, 0, 0, .6);
+    opacity: 0; transition: opacity .35s ease;
+  }
+  /* .pl-on = 探针发现“浏览器不允许自动出声”才显示；.pl-off = 已经解锁/允许，淡掉 */
+  #pa-loading .pl-sound.pl-on { opacity: .85; animation: pa-sound-breathe 2.2s ease-in-out infinite; }
+  #pa-loading .pl-sound.pl-on.pl-off { opacity: 0; animation: none; }
+  @keyframes pa-sound-breathe { 0%, 100% { opacity: .45; } 50% { opacity: .9; } }
+</style>
+<div id="pa-loading">
+  <div class="pl-screen">
+    <div class="pl-bg"></div>
+    <div class="pl-bar">
+      <div class="pl-track"><i class="pl-fill"></i></div>
+      <div class="pl-pct">0%</div>
+    </div>
+    <button type="button" class="pl-start" tabindex="0" autofocus>请点击任意位置开始游戏</button>
+    <div class="pl-tip">网络较慢，正在加载…</div>
+  </div>
+</div>
+
+<script>
+/* 加载遮罩的进度逻辑（构建产物）：Resource Timing 汇总真实下载字节 + 时间兜底，
+   场景启动（cc.director EVENT_AFTER_SCENE_LAUNCH）后淡出。只依赖浏览器原生 API。 */
+(function () {
+  var BUDGET = 27877030;
+
+  /* ---------------- 真实进度：Resource Timing 累计已下载字节 ----------------
+     脚本 / 图片 / XHR / fetch / wasm 全都记在里面（Cocos 的引擎包是 script 标签、
+     贴图走 Image，光 hook XHR 会漏掉一大半）。buffer 默认只存 250 条，放宽并定期结算。 */
+  var gotBytes = 0, settled = 0;
+  if (window.performance && performance.setResourceTimingBufferSize) {
+    try { performance.setResourceTimingBufferSize(4000); } catch (e) {}
+  }
+  function drain() {
+    if (!window.performance || !performance.getEntriesByType) { return; }
+    var all = performance.getEntriesByType('resource');
+    if (all.length < settled) { settled = 0; }               /* 有人清过 buffer */
+    for (var i = settled; i < all.length; i++) {
+      var e = all[i];
+      gotBytes += (e.decodedBodySize || e.transferSize || 0);
+    }
+    settled = all.length;
+    if (all.length > 1500 && performance.clearResourceTimings) {
+      performance.clearResourceTimings();
+      settled = 0;
+    }
+  }
+  var lastBytes = 0, lastGrowAt = Date.now();
+  function tick(elapsed) {
+    if (!sceneLaunched) { drain(); }
+    var real = BUDGET > 0 ? Math.min(1, gotBytes / BUDGET) : 0;
+    // 下载跑完的判定：比例已经很高（≥0.95）而且**连续 0.8s 不再增长**（= 没有在途文件了）。
+    // 比例是估算（BUDGET 按构建产物体积估），所以阈值取 0.95 而不是 1，免得永远等不满。
+    if (gotBytes > lastBytes + 1) { lastBytes = gotBytes; lastGrowAt = Date.now(); }
+    else if (real >= 0.95 && Date.now() - lastGrowAt > 800) { markLoaded(); }
+    return real;
+  }
+
+  var el = document.getElementById('pa-loading');
+  if (!el) { return; }
+  var screenEl = el.querySelector('.pl-screen') || el;   /* 对齐游戏画面的那一层（美术 + 进度条都在里面） */
+  var fillEl = el.querySelector('.pl-fill');
+  var pctEl = el.querySelector('.pl-pct');
+  var tipEl = el.querySelector('.pl-tip');
+  var soundEl = el.querySelector('.pl-sound');
+  var barEl = el.querySelector('.pl-bar');
+  var startEl = el.querySelector('.pl-start');
+  var ART_W = 2012;
+
+  /* ---------------- 音频解锁：绕开浏览器的自动播放限制（无提示、不需要玩家专门去点） ----------------
+     Chrome / Safari / 微信 都不允许「没有用户手势就出声」：页面没被点过时音频上下文一直是
+     suspended，游戏开局那条警报会被**静默丢掉**（实测：连 BufferSource.start 都不会发生）。
+     所以这里在**玩家随手的那一下**（点击/触摸/按键，加载页或开局画面上都算）上做三件事：
+       ① resume 页面里已有的 AudioContext；
+       ② **真播一段 40ms 的静音音频**（iOS / 微信要“手势里真的出过声”才算解锁）；
+       ③ 挂 window.__paAudioUnlocked = true（游戏侧的日志会读它，用来解释“这次为什么没声”）。
+     解锁了就开场的自动化警报真出声；玩家一下没点 → 浏览器静音（这是浏览器策略，不是脚本问题）。 */
+  var unlocked = false;
+  /** 探针结果：浏览器**本来就允许自动出声**（AudioContext 出生就是 running）：编辑器预览（Electron）、
+   *  原生/小游戏/WebView、放行过自动播放的站点都是这种。
+   *  真 → 警报不用手势解锁也能响 → **不挂“点击开始”闸门，进度条满就直接进游戏**（用户口径：
+   *      “如果一加载完就可以播放警报音效，不需要玩家点击屏幕，那就不要请点击任意位置开始游戏”）；
+   *  假 → 保留闸门：“点击”那一下既是进游戏、也是浏览器要求的用户手势（顺带解锁音频）。 */
+  var audioAutoOk = false;
+  /** 能不能“不点也能出声”：探针 running，或微信内核那条免手势钩子/已解锁标记已经生效 */
+  function audioCanAutoPlay() {
+    return audioAutoOk || window.__paAudioUnlocked === true;
+  }
+  function unlockAudio() {
+    if (unlocked) { return; }
+    unlocked = true;
+    try { window.__paAudioUnlocked = true; } catch (e) {}
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) {
+        var ctx = window.__paAudioCtx || (window.__paAudioCtx = new AC());
+        if (ctx.state !== 'running' && ctx.resume) { ctx.resume(); }
+        var src = ctx.createBufferSource();
+        src.buffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * 0.04)), ctx.sampleRate);
+        src.connect(ctx.destination);
+        src.start(0);
+      }
+    } catch (e) { /* 解锁失败了也别把遮罩搞挂 */ }
+    try {   /* 兜底：部分 iOS / 微信内核只认 HTMLAudio 走一遍 */
+      var a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=');
+      a.volume = 0;
+      var p = a.play();
+      if (p && p.catch) { p.catch(function () {}); }
+    } catch (e) {}
+    if (soundEl) { soundEl.classList.add('pl-off'); }   /* 解锁 → 提示淡掉 */
+    window.removeEventListener('pointerdown', unlockAudio, true);
+    window.removeEventListener('touchstart', unlockAudio, true);
+    window.removeEventListener('mousedown', unlockAudio, true);
+    window.removeEventListener('keydown', unlockAudio, true);
+  }
+  window.addEventListener('pointerdown', unlockAudio, true);
+  window.addEventListener('touchstart', unlockAudio, true);
+  window.addEventListener('mousedown', unlockAudio, true);
+  window.addEventListener('keydown', unlockAudio, true);
+
+  /* 只有**浏览器确实不让自动出声**时才把“点击屏幕进入游戏”显示出来：
+     建一个探针上下文，看它是 running（放行 → 一句话都不出、开场警报自动响）
+     还是 suspended（被挂起 → 提示玩家点一下，加载完才有警报，详见文件头 SOUND_HINT 说明）。 */
+  function probeAutoplay() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { return; }
+      if (!window.__paAudioCtx) { window.__paAudioCtx = new AC(); }
+      var ctx = window.__paAudioCtx;
+      function sync() {
+        var running = ctx.state === 'running';
+        // 浏览器/站点本来就允许自动出声（原生·小游戏·WebView·放行过的浏览器）→ 直接认“已解锁”，
+        // 游戏侧（SoundManager.isAudioUnlocked）据此**加载完成就放开场警报**，不再白等一次手势。
+        if (running) { audioAutoOk = true; }
+        if (running) { try { window.__paAudioUnlocked = true; } catch (e) {} }
+        if (!soundEl) { return; }
+        if (running) { soundEl.classList.add('pl-off'); }
+        else { soundEl.classList.add('pl-on'); }
+      }
+      sync();
+      if (ctx.addEventListener) { ctx.addEventListener('statechange', sync); }
+    } catch (e) { /* 探针失败就按“不提示”处理，保持安静 */ }
+  }
+  probeAutoplay();
+
+  /* 微信内核（Android X5）：WeixinJSBridgeReady 之后可免手势播放，顺手解锁一下 */
+  (function wxUnlock() {
+    function go() {
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC && !window.__paAudioCtx) { window.__paAudioCtx = new AC(); }
+        var ctx = window.__paAudioCtx;
+        if (ctx && ctx.state !== 'running' && ctx.resume) { ctx.resume(); }
+      } catch (e) {}
+      try {
+        var a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=');
+        a.volume = 0;
+        var p = a.play();
+        if (p && p.catch) { p.catch(function () {}); }
+      } catch (e) {}
+      window.__paAudioUnlocked = true;
+    }
+    if (typeof WeixinJSBridge !== 'undefined') { go(); return; }
+    document.addEventListener('WeixinJSBridgeReady', go, false);
+  })();
+
+
+  /* ---------------- 布局：算「美术像素 → CSS 像素」 + 和游戏画面**同矩形** ----------------
+     构建产物：`#GameDiv` 就是整窗（引擎 canvas 满窗）→ 遮罩铺满窗口；
+     编辑器预览页：游戏区 = 窗口 − 顶部工具栏（#GameDiv 在工具栏下面）→ 遮罩也缩到那块。
+     不对齐就会出现“加载界面和游戏界面大小不一致”（用户反馈）：加载页盖整窗、游戏只占下半。 */
+  function gameRect() {
+    var g = document.getElementById('GameDiv') || document.getElementById('GameCanvas');
+    if (g && g.getBoundingClientRect) {
+      var r = g.getBoundingClientRect();
+      if (r.width > 1 && r.height > 1) { return { r: r, real: true }; }
+    }
+    return { r: { left: 0, top: 0, width: window.innerWidth || 1280, height: window.innerHeight || 720 },
+             real: false };
+  }
+  /* “量到了就显”：`.pl-screen`（美术 + 进度条）等**真实的游戏画面矩形**出来才淡入；
+     在此之前只有外层的黑底（已经压住 Cocos 启动画面，不会看到它一闪）。
+     实测 #GameDiv：构建产物第一帧就是整窗（~0.1s 显形）；编辑器预览页 ~0.5s 出来。 */
+  var readyShown = false, readyDeadline = Date.now() + 1500, layoutIv = 0;
+  function layout() {
+    var m = gameRect(), r = m.r;
+    screenEl.style.left = r.left + 'px';
+    screenEl.style.top = r.top + 'px';
+    screenEl.style.width = r.width + 'px';
+    screenEl.style.height = r.height + 'px';
+    var vw = r.width, vh = r.height;
+    var w = Math.min(vw * 0.52, vh * 1.15, 780);
+    w = Math.max(w, Math.min(vw * 0.92, 420));      /* 窄屏/竖屏兜底 */
+    el.style.setProperty('--u', (w / ART_W).toFixed(5));
+    if (readyShown) { return; }
+    if (m.real || Date.now() > readyDeadline) {
+      readyShown = true;
+      /* 先让画面在**最终矩形**上就位（这一下不要过渡，否则会看到它从整窗“滑/缩”过去），
+         下一帧再交还 CSS 过渡并加 .pl-ready 淡入 —— 之后的矩形变化才是平滑的。 */
+      screenEl.style.transition = 'none';
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {          /* 等这一帧画完（否则“改样式 + 加类”同一帧会被当成几何变化而滑动） */
+          screenEl.style.transition = '';
+          screenEl.classList.add('pl-ready');
+        });
+      });
+      if (layoutIv) { clearInterval(layoutIv); }
+      layoutIv = setInterval(layout, 1000);         /* 显形后低频跟随（预览页切设备/改窗口会变） */
+    }
+  }
+  layoutIv = setInterval(layout, 100);              /* 显形前 100ms 量一次（≈ 0.1~0.2s 后就能显形） */
+  layout();
+  window.addEventListener('resize', layout);
+  window.addEventListener('orientationchange', layout);
+  document.addEventListener('DOMContentLoaded', layout);
+
+  /* ---------------- 阶段：加载完成 / 场景启动 ---------------- */
+  var sceneLaunched = false, hidden = false, gateShown = false, autoEntered = false;
+  var clicked = false, clickedAt = 0;
+  /** 加载完成（下载都跑完 / 场景已经起来）：目标进度推到 100%，**填满之后**才换“请点击…开始游戏”。
+   *  以前是 shown>=0.965 就换（那时条还没满，用户反馈“进度条没满就显示文字”）。 */
+  var loaded = false, fullSince = 0;
+  function markLoaded() {
+    if (loaded) { return; }
+    loaded = true;
+  }
+  function hideOverlay() {
+    if (hidden) { return; }
+    hidden = true;
+    if (layoutIv) { clearInterval(layoutIv); }        /* 遮罩没了就别再量了 */
+    try { window.__paGatePending = false; } catch (e) {}
+    el.classList.add('pl-hide');
+    setTimeout(function () { el.style.display = 'none'; }, 900);
+    try { console.log('[pa-loading] 遮罩淡出（进入游戏）'); } catch (e) {}
+  }
+  /** 收起进度条：类 + **内联样式**双保险（内联优先级最高，任何旧 CSS/缓存都盖不住 → 一定消失）。
+   *  闸门（需点击）和**直接进游戏**两条路都要收条。 */
+  function hideBar() {
+    if (!barEl) { return; }
+    barEl.classList.add('pl-gone');
+    barEl.style.opacity = '0';
+    barEl.style.pointerEvents = 'none';
+    barEl.style.display = 'none';
+  }
+  /** 进度条满 + 浏览器**本来就允许自动出声** → 不挂闸门，**直接进游戏**（用户口径：
+   *  “如果一加载完就可以播放警报音效，不需要玩家点击屏幕，那就不要请点击任意位置开始游戏，
+   *   进度条满就直接进入游戏”）。收条后复用“已确认”标记等场景就绪再淡出（否则会露出引擎 logo）。 */
+  function enterGame() {
+    if (gateShown || hidden || autoEntered) { return; }
+    autoEntered = true;
+    hideBar();
+    clicked = true; clickedAt = Date.now();
+    tryFade();
+    try { console.log('[pa-loading] 进度条已满 + 浏览器允许自动出声 → 直接进入游戏（不挂闸门）'); } catch (e) {}
+  }
+  /** 进度条满之后怎么走：能自动出声 → **直接进游戏**；真被浏览器拦住 → 挂“点击开始”闸门。
+   *  `frame()` 和兜底定时器都用这一个函数，免得两条路分出不同结果（踩过：定时器直接 showGate，
+   *  把“允许自动播放 → 直接进游戏”那条路整条绕过了）。 */
+  function onBarFull() {
+    if (gateShown || autoEntered || hidden) { return; }
+    if (audioCanAutoPlay()) { enterGame(); } else { showGate(); }
+  }
+  /** 显示闸门：收起进度条、换成提示文字，并告诉游戏侧“先别开场”。
+   *  **只在真被浏览器拦住音频时才挂**（探针 = suspended）——那一下点击既是进游戏、也是解锁手势。 */
+  function showGate() {
+    if (gateShown || hidden) { return; }
+    gateShown = true;
+    hideBar();
+    if (startEl) {
+      startEl.classList.add('pl-on');
+      startEl.style.opacity = '1';
+      // 聚焦按钮：键盘用户直接按 回车/空格（在聚焦按钮上会派发可信 click = 用户手势）也能进入游戏。
+      // 先把焦点要回页面（编辑器内嵌预览/webview 里常见的情况），再聚焦按钮。
+      try { window.focus(); } catch (eW) {}
+      try { startEl.focus({ preventScroll: true }); } catch (e) { try { startEl.focus(); } catch (e2) {} }
+    }
+    // 游戏侧（StartMask）读这个标记：点击前不发开场警报、不放开场提示图、不走 2 分钟倒计时
+    try { window.__paGatePending = true; } catch (e) {}
+    // 控制台留痕：排查“进度条到底有没有被收走”时看这一条（旧缓存页面看不到）
+    try { console.log('[pa-loading] 进度条已满 → 收起进度条，显示“请点击任意位置开始游戏”'); } catch (e) {}
+  }
+  /** 点击（且场景已就绪）才淡出；点击早于场景就绪时先记下，等场景起来再淡（否则会露出引擎启动画面） */
+  function tryFade() {
+    if (!clicked || hidden) { return; }
+    if (sceneLaunched || (Date.now() - clickedAt) > 10000) { hideOverlay(); }
+  }
+  function onSceneLaunched() {
+    if (sceneLaunched) { return; }
+    sceneLaunched = true;
+    // 场景起来了 = 加载完成（条会填满到 100% 后再换文字；这里**不直接 showGate**，
+    // 否则会在“进度条还没满”的时候就把文字换出来 —— 用户反馈过的那个问题）
+    markLoaded();
+    tryFade();
+  }
+  /** 点击“开始游戏”：解锁音频（幂等）后进入游戏。**必须点一下才进**（不加超时放行）。 */
+  function onGateClick() {
+    if (!gateShown || hidden) { return; }
+    clicked = true; clickedAt = Date.now();
+    try { window.__paGatePending = false; } catch (e) {}
+    try { window.dispatchEvent(new Event('pa-start')); } catch (e) {}
+    unlockAudio();
+    tryFade();
+  }
+  // 触发面尽量宽（这些都是“能给浏览器手势”的事件）：指针/鼠标按下与抬起、触摸结束、按键；
+  // 另外 <button> 自身被点/被回车触发时还会走 click（见 startEl 的监听）——键盘也能进游戏。
+  window.addEventListener('pointerdown', onGateClick, true);
+  window.addEventListener('pointerup', onGateClick, true);
+  window.addEventListener('touchstart', onGateClick, true);
+  window.addEventListener('touchend', onGateClick, true);
+  window.addEventListener('mousedown', onGateClick, true);
+  window.addEventListener('mouseup', onGateClick, true);
+  window.addEventListener('keydown', onGateClick, true);
+  if (startEl) { startEl.addEventListener('click', onGateClick); }
+  (function watchEngine() {
+    var tries = 0;
+    var iv = setInterval(function () {
+      if (++tries > 1800) { clearInterval(iv); return; }     /* 最多等 3 分钟 */
+      if (!window.System || !window.System.import) { return; }
+      try {
+        window.System.import('cc').then(function (cc) {
+          clearInterval(iv);
+          var ev = (cc.Director && cc.Director.EVENT_AFTER_SCENE_LAUNCH) ||
+                   'director_after_scene_launch';
+          if (cc.director && cc.director.once) { cc.director.once(ev, onSceneLaunched); }
+        }, function () { /* import map 还没就绪，下一轮再来 */ });
+      } catch (e) { /* 同上 */ }
+    }, 100);
+  })();
+
+  /* ---------------- 主循环：平滑、单调、限速 ---------------- */
+  var shown = 0, t0 = Date.now(), last = t0, tipShown = false, target = 0;
+
+  function frame() {
+    var now = Date.now();
+    var dt = Math.min(0.25, Math.max(0.001, (now - last) / 1000));
+    last = now;
+    var elapsed = (now - t0) / 1000;
+
+    var raw = tick(elapsed);                                  /* 各平台自己算**原始**进度 0~1 */
+    if (loaded || sceneLaunched) { raw = 1; }                 /* 加载完成 → 把进度推到满 */
+    var next = Math.min(Math.max(raw, Math.min(0.9, elapsed / 40)), 0.97);
+    target = Math.max(target, next);
+    if (loaded || sceneLaunched) { target = 1; }
+
+    var prev = shown;
+    shown += (target - shown) * Math.min(1, dt * 4);
+    if (shown > prev + dt * 0.85) { shown = prev + dt * 0.85; }   /* 限速：别一闪而过 */
+    if (shown < prev) { shown = prev; }                            /* 单调：不回退 */
+
+    fillEl.style.width = (shown * 100).toFixed(2) + '%';
+    pctEl.textContent = Math.round(shown * 100) + '%';
+
+    // **进度条填满之后**才收起它、换成“请点击任意位置开始游戏”（用户口径：没满之前不许换文字）。
+    // 填满后先停 250ms 让玩家看见“满格 + 100%”，再换文字。
+    if (!gateShown && !autoEntered && loaded && shown >= 0.999) {
+      if (!fullSince) { fullSince = Date.now(); }
+      else if (Date.now() - fullSince > 250) {
+        onBarFull();
+      }
+    }
+    if (!tipShown && !sceneLaunched && elapsed > 20 && shown < 0.9) {
+      tipShown = true;
+      tipEl.classList.add('pl-show');
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* 兜底：**满格后必须分流**（收条 + 进游戏 / 挂闸门），且不依赖 requestAnimationFrame ——
+     切到后台 / 省电模式下 rAF 会被节流甚至暂停，那时 shown 已经到 1 也没有人再调 frame()，
+     进度条就会一直停在满格。这个定时器与 frame() 共用同一份闭包变量和同一个 onBarFull()，
+     连“填满后停 250ms（看见满格）”也在这里诚实地重计一遍（rAF 停了 fullSince 没人置）。 */
+  setInterval(function () {
+    if (!loaded || shown < 0.999) { return; }
+    if (!fullSince) { fullSince = Date.now(); return; }
+    if (Date.now() - fullSince > 250) { onBarFull(); }
+  }, 250);
+  try { console.log('[pa-loading] 加载界面 v2026-09-23（满格 → 收起进度条 → 点击开始）'); } catch (e) {}
+})();
+</script>
+<!-- pa-loading:end -->
+  <div id="GameDiv" cc_exact_fit_screen="true">
+      <div id="Cocos3dGameContainer">
+        <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
+      </div>
+    </div>
+  
+
+<!-- Polyfills bundle. -->
+
+<script src="src/polyfills.bundle.5adbf.js" charset="utf-8"> </script>
+
+
+<!-- SystemJS support. -->
+<script src="src/system.bundle.543e6.js" charset="utf-8"> </script>
+
+<!-- Import map -->
+<script src="src/import-map.92567.json" type="systemjs-importmap" charset="utf-8"> </script>
+
+<script>
+    System.import('./index.8937c.js').catch(function(err) { console.error(err); })
+</script>
+
+</body>
+</html>
